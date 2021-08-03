@@ -3,10 +3,10 @@ package oauth
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
-
-	"github.com/davidatdavidmarais/planningcenter/services/models"
 )
 
 const (
@@ -17,11 +17,11 @@ const (
 )
 
 type OAuthClient struct {
-	config models.Config
+	config Config
 	cl     *http.Client
 }
 
-func New(cl *http.Client, c models.Config) *OAuthClient {
+func New(cl *http.Client, c Config) *OAuthClient {
 	return &OAuthClient{
 		cl:     cl,
 		config: c,
@@ -49,10 +49,15 @@ func (a *OAuthClient) ExchangeToken(code, redirectURI string) (*ExchangeTokenRes
 		return nil, err
 	}
 
-	cl := &http.Client{}
-	resp, err := cl.Do(httpReq)
+	httpReq.Header.Add("content-type", "application/json")
+
+	resp, err := a.cl.Do(httpReq)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New("planning center api error")
 	}
 
 	defer resp.Body.Close()
@@ -72,7 +77,7 @@ func (a *OAuthClient) ExchangeToken(code, redirectURI string) (*ExchangeTokenRes
 
 func (a *OAuthClient) RefreshToken(refreshToken string) (*ExchangeTokenResponse, error) {
 	req := &RefreshTokenRequest{
-		GrantType:    EXCHANGE_TOKEN_GRANT_TYPE,
+		GrantType:    REFRESH_TOKEN_GRANT_TYPE,
 		ClientID:     a.config.ClientID,
 		ClientSecret: a.config.ClientSecret,
 		RefreshToken: refreshToken,
@@ -83,6 +88,8 @@ func (a *OAuthClient) RefreshToken(refreshToken string) (*ExchangeTokenResponse,
 		return nil, err
 	}
 
+	fmt.Println(string(body))
+
 	buf := bytes.NewBuffer(body)
 
 	httpReq, err := http.NewRequest(http.MethodPost, a.config.BaseURL+PATH, buf)
@@ -90,10 +97,15 @@ func (a *OAuthClient) RefreshToken(refreshToken string) (*ExchangeTokenResponse,
 		return nil, err
 	}
 
-	cl := &http.Client{}
-	resp, err := cl.Do(httpReq)
+	httpReq.Header.Add("content-type", "application/json")
+
+	resp, err := a.cl.Do(httpReq)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New("planning center api error")
 	}
 
 	defer resp.Body.Close()

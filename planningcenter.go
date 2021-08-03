@@ -3,7 +3,6 @@ package planningcenter
 import (
 	"net/http"
 
-	"github.com/davidatdavidmarais/planningcenter/services/models"
 	"github.com/davidatdavidmarais/planningcenter/services/oauth"
 )
 
@@ -16,7 +15,7 @@ type PlanningCenter struct {
 }
 
 func New(ClientID, ClientSecret string) *PlanningCenter {
-	config := models.Config{
+	config := oauth.Config{
 		ClientID:     ClientID,
 		ClientSecret: ClientSecret,
 		BaseURL:      BaseURL,

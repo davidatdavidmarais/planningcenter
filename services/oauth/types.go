@@ -1,5 +1,11 @@
 package oauth
 
+type Config struct {
+	ClientID     string
+	ClientSecret string
+	BaseURL      string
+}
+
 type RefreshTokenRequest struct {
 	GrantType    string `json:"grant_type"`
 	RefreshToken string `json:"refresh_token"`
