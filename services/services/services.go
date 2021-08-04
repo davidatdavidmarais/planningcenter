@@ -1,23 +1,20 @@
-package people
+package services
 
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
-const (
-	PATH = "/people/v2/me"
-)
-
-type PeopleClient struct {
+type ServicesClient struct {
 	baseURL string
 	cl      *http.Client
 }
 
-func (p *PeopleClient) Me(token string) (*Person, error) {
-	httpReq, err := http.NewRequest(http.MethodGet, p.baseURL+PATH, nil)
+func (p *ServicesClient) Schdules(token, person_id string) (*SchedulesResponse, error) {
+	httpReq, err := http.NewRequest(http.MethodGet, p.baseURL+fmt.Sprintf("/services/v2/people/%s/schedules", person_id), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +36,7 @@ func (p *PeopleClient) Me(token string) (*Person, error) {
 		return nil, errors.New(string(respBytes))
 	}
 
-	respObj := new(Person)
+	respObj := new(SchedulesResponse)
 	err = json.Unmarshal(respBytes, respObj)
 	if err != nil {
 		return nil, err

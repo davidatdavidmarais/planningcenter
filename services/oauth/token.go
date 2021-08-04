@@ -56,14 +56,14 @@ func (a *OAuthClient) ExchangeToken(code, redirectURI string) (*ExchangeTokenRes
 		return nil, err
 	}
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New("planning center api error")
-	}
-
 	defer resp.Body.Close()
 	respBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(string(respBytes))
 	}
 
 	respObj := new(ExchangeTokenResponse)
@@ -104,14 +104,14 @@ func (a *OAuthClient) RefreshToken(refreshToken string) (*ExchangeTokenResponse,
 		return nil, err
 	}
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New("planning center api error")
-	}
-
 	defer resp.Body.Close()
 	respBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New(string(respBytes))
 	}
 
 	respObj := new(ExchangeTokenResponse)
