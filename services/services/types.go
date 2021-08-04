@@ -1,19 +1,6 @@
 package services
 
-type SchedulesResponse struct {
-	Data []Schedule `json:"data"`
-}
-
-type Schedule struct {
-	ID            string              `json:"id"`
-	Type          string              `json:"type"`
-	Relationships RelationshipDetails `json:"relationships"`
-}
-
-type RelationshipDetails struct {
-	ServiceType RelationshipType `json:"service_type"`
-	Plan        RelationshipType `json:"plan"`
-}
+// Common
 
 type RelationshipType struct {
 	Data RelationshipData `json:"data"`
@@ -22,4 +9,51 @@ type RelationshipType struct {
 type RelationshipData struct {
 	Type string `json:"type"`
 	ID   string `json:"id"`
+}
+
+type Base struct {
+	ID   string `json:"id"`
+	Type string `json:"type"`
+}
+
+// Schedules
+
+type SchedulesResponse struct {
+	Data []Schedule `json:"data"`
+}
+
+type Schedule struct {
+	Base
+
+	Relationships ScheduleRelationships `json:"relationships"`
+}
+
+type ScheduleRelationships struct {
+	ServiceType RelationshipType `json:"service_type"`
+	Plan        RelationshipType `json:"plan"`
+}
+
+// Items
+
+type ItemsResponse struct {
+	Data []Item `json:"data"`
+}
+
+type Item struct {
+	Base
+
+	Attributes ItemAttributes `json:"attributes"`
+
+	Relationships ItemRelationships `json:"relationships"`
+}
+
+type ItemAttributes struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Sequence    int32  `json:"sequence"`
+	ItemType    string `json:"item_type"`
+}
+
+type ItemRelationships struct {
+	Arrangement RelationshipType `json:"arrangement"`
 }

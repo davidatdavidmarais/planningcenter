@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -44,6 +45,8 @@ func HttpRequest(cl *http.Client, req *http.Request, resp interface{}) error {
 	if httpResp.StatusCode != 200 {
 		return errors.New(string(respBytes))
 	}
+
+	fmt.Println(string(respBytes))
 
 	err = json.Unmarshal(respBytes, resp)
 	if err != nil {
