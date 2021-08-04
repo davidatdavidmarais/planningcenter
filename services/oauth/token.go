@@ -1,12 +1,9 @@
 package oauth
 
 import (
-	"bytes"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"io/ioutil"
 	"net/http"
+
+	"github.com/davidatdavidmarais/planningcenter/services/utils"
 )
 
 const (
@@ -37,42 +34,19 @@ func (a *OAuthClient) ExchangeToken(code, redirectURI string) (*ExchangeTokenRes
 		RedirectURI:  redirectURI,
 	}
 
-	body, err := json.Marshal(req)
+	buf, err := utils.BodyBuffer(req)
 	if err != nil {
 		return nil, err
 	}
-
-	buf := bytes.NewBuffer(body)
 
 	httpReq, err := http.NewRequest(http.MethodPost, a.config.BaseURL+PATH, buf)
 	if err != nil {
 		return nil, err
 	}
 
-	httpReq.Header.Add("content-type", "application/json")
+	resp := new(ExchangeTokenResponse)
 
-	resp, err := a.cl.Do(httpReq)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	respBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != 200 {
-		return nil, errors.New(string(respBytes))
-	}
-
-	respObj := new(ExchangeTokenResponse)
-	err = json.Unmarshal(respBytes, respObj)
-	if err != nil {
-		return nil, err
-	}
-
-	return respObj, nil
+	return resp, utils.HttpRequest(a.cl, httpReq, resp)
 }
 
 func (a *OAuthClient) RefreshToken(refreshToken string) (*ExchangeTokenResponse, error) {
@@ -83,42 +57,17 @@ func (a *OAuthClient) RefreshToken(refreshToken string) (*ExchangeTokenResponse,
 		RefreshToken: refreshToken,
 	}
 
-	body, err := json.Marshal(req)
+	buf, err := utils.BodyBuffer(req)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(string(body))
-
-	buf := bytes.NewBuffer(body)
 
 	httpReq, err := http.NewRequest(http.MethodPost, a.config.BaseURL+PATH, buf)
 	if err != nil {
 		return nil, err
 	}
 
-	httpReq.Header.Add("content-type", "application/json")
+	resp := new(ExchangeTokenResponse)
 
-	resp, err := a.cl.Do(httpReq)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	respBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != 200 {
-		return nil, errors.New(string(respBytes))
-	}
-
-	respObj := new(ExchangeTokenResponse)
-	err = json.Unmarshal(respBytes, respObj)
-	if err != nil {
-		return nil, err
-	}
-
-	return respObj, nil
+	return resp, utils.HttpRequest(a.cl, httpReq, resp)
 }

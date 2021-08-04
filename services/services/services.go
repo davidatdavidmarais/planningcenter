@@ -1,11 +1,10 @@
 package services
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+
+	"github.com/davidatdavidmarais/planningcenter/services/utils"
 )
 
 type ServicesClient struct {
@@ -19,28 +18,7 @@ func (p *ServicesClient) Schdules(token, person_id string) (*SchedulesResponse, 
 		return nil, err
 	}
 
-	httpReq.Header.Add("Authorization", "Bearer "+token)
+	resp := new(SchedulesResponse)
 
-	resp, err := p.cl.Do(httpReq)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	respBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != 200 {
-		return nil, errors.New(string(respBytes))
-	}
-
-	respObj := new(SchedulesResponse)
-	err = json.Unmarshal(respBytes, respObj)
-	if err != nil {
-		return nil, err
-	}
-
-	return respObj, nil
+	return resp, utils.HttpRequestWithBearer(p.cl, httpReq, token, resp)
 }
