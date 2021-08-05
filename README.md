@@ -3,7 +3,7 @@ Planning Center API Integration
 
 ### Initialization
 
-> Retrieve the client_id and client_secret from your planning center developer dashboard
+> Retrieve the **client_id** and **client_secret** from your *planning center developer dashboard*
 ```
 pc := planningcenter.New(
 	os.Getenv("PLANNING_CENTER_CLIENT_ID"),
@@ -41,7 +41,7 @@ if err != nil {
 
 ### Services
 #### Getting schedules
-> person_id retrieved from pc.PeopleClient.Me("access_token")
+> Retrieve **person_id** from *pc.PeopleClient.Me("access_token")*
 ```
 res, err := pc.ServicesClient.Schdules("access_token", "person_id")
 if err != nil {
@@ -52,7 +52,7 @@ if err != nil {
 
 #### Getting items for a schedule
 
-> service_type_id & plan_id retrieved from pc.ServicesClient.Schdules("access_token", "person_id")
+> Retrieve **service_type_id** & **plan_id** from *pc.ServicesClient.Schdules("access_token", "person_id")*
 ```
 res, err := pc.ServicesClient.Items("access_token", "service_type_id", "plan_id")
 if err != nil {
@@ -61,9 +61,9 @@ if err != nil {
 ```
 
 #### Getting an arrangement for a song item
-> service_type_id & plan_id retrieved from pc.ServicesClient.Schdules("access_token", "person_id")
+> Retrieve **service_type_id** & **plan_id** from *pc.ServicesClient.Schdules("access_token", "person_id")*
 > 
-> item_id retrieved from pc.ServicesClient.Items("access_token", "service_type_id", "plan_id")
+> Retrieve **item_id** from *pc.ServicesClient.Items("access_token", "service_type_id", "plan_id")*
 ```
 res, err := pc.ServicesClient.Arrangement("access_token", "service_type_id", "plan_id", "item_id")
 if err != nil {
