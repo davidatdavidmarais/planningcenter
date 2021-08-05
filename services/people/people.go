@@ -15,6 +15,13 @@ type PeopleClient struct {
 	cl      *http.Client
 }
 
+func New(baseURL string, cl *http.Client) *PeopleClient {
+	return &PeopleClient{
+		baseURL: baseURL,
+		cl:      cl,
+	}
+}
+
 func (p *PeopleClient) Me(token string) (*Person, error) {
 	httpReq, err := http.NewRequest(http.MethodGet, p.baseURL+PATH, nil)
 	if err != nil {

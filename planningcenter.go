@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/davidatdavidmarais/planningcenter/services/oauth"
+	"github.com/davidatdavidmarais/planningcenter/services/people"
+	"github.com/davidatdavidmarais/planningcenter/services/services"
 )
 
 const (
@@ -11,7 +13,9 @@ const (
 )
 
 type PlanningCenter struct {
-	OAuthClient *oauth.OAuthClient
+	OAuthClient    *oauth.OAuthClient
+	PeopleClient   *people.PeopleClient
+	ServicesClient *services.ServicesClient
 }
 
 func New(ClientID, ClientSecret string) *PlanningCenter {
@@ -22,6 +26,8 @@ func New(ClientID, ClientSecret string) *PlanningCenter {
 	}
 
 	return &PlanningCenter{
-		OAuthClient: oauth.New(&http.Client{}, config),
+		OAuthClient:    oauth.New(&http.Client{}, config),
+		PeopleClient:   people.New(config.BaseURL, &http.Client{}),
+		ServicesClient: services.New(config.BaseURL, &http.Client{}),
 	}
 }

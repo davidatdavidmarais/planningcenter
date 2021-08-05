@@ -12,6 +12,13 @@ type ServicesClient struct {
 	cl      *http.Client
 }
 
+func New(baseURL string, cl *http.Client) *ServicesClient {
+	return &ServicesClient{
+		baseURL: baseURL,
+		cl:      cl,
+	}
+}
+
 func (s *ServicesClient) Schdules(token, person_id string) (*SchedulesResponse, error) {
 	httpReq, err := http.NewRequest(http.MethodGet, s.baseURL+fmt.Sprintf("/services/v2/people/%s/schedules", person_id), nil)
 	if err != nil {
