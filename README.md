@@ -1,7 +1,7 @@
 # planningcenter
 Planning Center API Integration
 
-## Initialize planning center client
+### Initialization
 
 ```
 // Where os.Getenv("PLANNING_CENTER_CLIENT_ID") & os.Getenv("PLANNING_CENTER_CLIENT_SECRET") should be retrieved from your planning center developer dashboard.
