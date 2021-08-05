@@ -1,5 +1,7 @@
 package services
 
+import "time"
+
 // Common
 
 type RelationshipType struct {
@@ -25,7 +27,17 @@ type SchedulesResponse struct {
 type Schedule struct {
 	Base
 
+	Attributes ScheduleAttributes `json:"attributes"`
+
 	Relationships ScheduleRelationships `json:"relationships"`
+}
+
+type ScheduleAttributes struct {
+	OrganizationName string    `json:"organization_name"`
+	ServiceTypeName  string    `json:"service_type_name"`
+	DateTime         time.Time `json:"sort_date"`
+	TeamName         string    `json:"team_name"`
+	TeamPositionName string    `json:"team_position_name"`
 }
 
 type ScheduleRelationships struct {
@@ -48,12 +60,40 @@ type Item struct {
 }
 
 type ItemAttributes struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Sequence    int32  `json:"sequence"`
-	ItemType    string `json:"item_type"`
+	Title       string  `json:"title"`
+	Description string  `json:"description"`
+	Sequence    int32   `json:"sequence"`
+	ItemType    string  `json:"item_type"`
+	Length      float32 `json:"length"`
+
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type ItemRelationships struct {
 	Arrangement RelationshipType `json:"arrangement"`
+}
+
+// Arrangement
+
+type ArrangementResponse struct {
+	Data Arrangement `json:"data"`
+}
+
+type Arrangement struct {
+	Base
+
+	Attributes ArrangementAttributes `json:"attributes"`
+}
+
+type ArrangementAttributes struct {
+	BPM           float32 `json:"bpm"`
+	ChordChart    string  `json:"chord_chart"`
+	ChordChartKey string  `json:"chord_chart_key"`
+	Lyrics        string  `json:"lyrics"`
+	Meter         string  `json:"meter"`
+	Name          string  `json:"name"`
+
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

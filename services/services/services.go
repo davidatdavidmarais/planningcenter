@@ -33,3 +33,14 @@ func (s *ServicesClient) Items(token, serviceTypeID, planID string) (*ItemsRespo
 
 	return resp, utils.HttpRequestWithBearer(s.cl, httpReq, token, resp)
 }
+
+func (s *ServicesClient) Arrangement(token, serviceTypeID, planID, itemID string) (*ArrangementResponse, error) {
+	httpReq, err := http.NewRequest(http.MethodGet, s.baseURL+fmt.Sprintf("/services/v2/service_types/%s/plans/%s/items/%s/arrangement", serviceTypeID, planID, itemID), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := new(ArrangementResponse)
+
+	return resp, utils.HttpRequestWithBearer(s.cl, httpReq, token, resp)
+}
