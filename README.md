@@ -1,5 +1,5 @@
 # planningcenter
-Planning Center API Integration
+Go wrapper for Planning Center API
 
 ### Initialization
 
